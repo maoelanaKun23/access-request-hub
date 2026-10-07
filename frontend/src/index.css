@@ -1,0 +1,155 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================
+   THEME (DESIGN SYSTEM)
+========================= */
+@layer base {
+  .absensi {
+    /* Base colors */
+    --background: 210 40% 96%;
+    /* #F1F5F9 */
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Primary (BIRU) */
+    --primary: 217 91% 60%;
+    /* #2563EB */
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary (UNGU - siswa) */
+    --secondary: 262 83% 58%;
+    /* #7C3AED */
+    --secondary-foreground: 0 0% 100%;
+
+    /* Others */
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --info: 205 97% 59%;
+    --info-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 217 91% 60%;
+
+    /* Sidebar */
+    --sidebar-background: 222 47% 11%;
+    /* #0F172A */
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-accent: 217 33% 17%;
+    /* #1E293B */
+
+    /* Rapor */
+    --rapor: 222 64% 33%;
+    /* #1E3A8A */
+
+    --radius: 0.5rem;
+  }
+
+  /* Dark mode */
+  .dark .absensi {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 262 83% 58%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 217 33% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 217 91% 60%;
+  }
+}
+
+/* =========================
+   GLOBAL BASE STYLE
+========================= */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Inter";
+  }
+}
+
+*::-webkit-scrollbar {
+  @apply h-3 w-3;
+}
+
+*::-webkit-scrollbar-thumb {
+  @apply bg-muted rounded-full hover:bg-gray-400 transition-colors;
+}
+
+*::-webkit-scrollbar-track {
+  @apply bg-gray-200 rounded-full;
+}
+
+@layer utilities {
+  .bg-green-gradient {
+    @apply bg-gradient-to-b from-[#58ab24] to-[#24450f];
+  }
+
+  .bg-red-gradient {
+    @apply bg-gradient-to-b from-[#cf253c] to-[#f41f59];
+  }
+
+  .bg-yellow-gradient {
+    @apply bg-gradient-to-b from-[#ffea01] to-[#ffc300];
+  }
+
+  .bg-maroon-gradient {
+    @apply bg-gradient-to-b from-[#A30B1F] to-[#7E1633];
+  }
+
+  .bg-gray-gradient {
+    @apply bg-gradient-to-b from-[#EDEDED] to-[#D1D1D1];
+  }
+
+  .vertical-chart>div {
+    height: var(--chart-height) !important;
+  }
+}
+
+.no-arrow-number::-webkit-outer-spin-button,
+.no-arrow-number::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.no-arrow-number[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+}

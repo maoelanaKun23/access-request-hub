@@ -1,0 +1,291 @@
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { idFormatter } from "@/lib/id-formatter";
+import testProps from "@/lib/testing";
+import { cn } from "@/lib/utils";
+import {
+  type Row,
+  type Table as TableType,
+  flexRender,
+} from "@tanstack/react-table";
+import type { ReactElement } from "react";
+import { Fragment } from "react/jsx-runtime";
+
+interface DataTableProps<TData> {
+  table: TableType<TData>;
+  isLoading?: boolean;
+  renderSubComponent?: (props: { row: Row<TData> }) => ReactElement;
+  onRowSelect?: (row: Row<TData>) => void;
+  selectedRowId?: string;
+  backgroundColor?: (row: TData) => string | undefined;
+  showFooter?: boolean;
+  getFooterColor?: (columnId: string) => string | undefined;
+  testID?: string;
+}
+
+export function DataTableCustomRiskLevel<TData>({
+  table,
+  isLoading,
+  renderSubComponent,
+  onRowSelect,
+  selectedRowId,
+  backgroundColor,
+  showFooter = false,
+  getFooterColor,
+  testID,
+}: DataTableProps<TData>) {
+  const headerGroups = table.getHeaderGroups();
+  const footerGroups = table.getFooterGroups();
+  const bodyHeaderGroup =
+    headerGroups.length > 1 ? headerGroups[1] : headerGroups[0];
+
+  const initialPageSize = table.options.state.pagination?.pageSize ?? 5;
+
+  const rowSpanState: Record<string, number> = {};
+
+  return (
+    <div className="overflow-hidden">
+      <div className="overflow-x-auto">
+        <Table className="mb-2 moz-table">
+          <TableHeader className="bg-primary moz-table-header border-b border-gray-300 [&_tr]:border-0">
+            {headerGroups.map((headerGroup, index) => (
+              <TableRow
+                key={headerGroup.id}
+                className={cn(
+                  "hover:bg-transparent moz-table-row",
+                  headerGroups.length > 1 &&
+                    index === 0 &&
+                    "relative top-2 z-0 moz-table-row-top",
+                  headerGroups.length > 1 &&
+                    index === 1 &&
+                    "relative z-10 moz-table-row-bottom"
+                )}
+              >
+                {headerGroup.headers.map((header, idx) => (
+                  <TableHead
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    style={
+                      header.column.getIsPinned()
+                        ? {
+                            left:
+                              header.column.getIsPinned() === "left"
+                                ? `${header.column.getStart("left") ?? 0}px`
+                                : undefined,
+                            right:
+                              header.column.getIsPinned() === "right"
+                                ? `${header.column.getStart("right") ?? 0}px`
+                                : undefined,
+                          }
+                        : {}
+                    }
+                    className={cn(
+                      "text-foreground text-center font-bold px-2 first:pl-4 last:pr-4 moz-table-head relative opacity-95 z-0",
+                      header.column.getIsPinned() &&
+                        `sticky opacity-100 z-20 bg-primary`,
+                      index === 0 && idx === 0 && "rounded-tl-lg",
+                      index === 0 &&
+                        headerGroup.headers.length - 1 === idx &&
+                        "rounded-tr-lg"
+                    )}
+                    {...testProps(testID + "_HEADER_" + idFormatter(header.id))}
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+
+          <TableBody>
+            {isLoading ? (
+              Array.from({ length: initialPageSize }).map((_, index) => (
+                <TableRow key={index}>
+                  {bodyHeaderGroup.headers.map((header) => (
+                    <TableCell
+                      key={header.id}
+                      className="animate-pulse bg-gray-200 h-10"
+                    />
+                  ))}
+                </TableRow>
+              ))
+            ) : table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => {
+                const rowData = row.original;
+                const rowSpans =
+                  typeof rowData === "object" &&
+                  rowData !== null &&
+                  "rowSpan" in rowData &&
+                  typeof (rowData as any).rowSpan === "object"
+                    ? (rowData as { rowSpan: Record<string, number> }).rowSpan
+                    : {};
+
+                const rowBackgroundColor = backgroundColor?.(row.original);
+
+                return (
+                  <Fragment key={row.id}>
+                    <TableRow
+                      data-state={row.getIsSelected() && "selected"}
+                      className={cn(
+                        "rounded-lg",
+                        row.getIsExpanded() &&
+                          "rounded-b-none shadow-[0_-2px_4px_rgba(0,0,0,0.1)] m-0",
+                        onRowSelect &&
+                          (row.original as any).parameterId === selectedRowId
+                          ? "bg-primary/10 hover:bg-primary/20"
+                          : onRowSelect
+                            ? "hover:bg-gray-50"
+                            : ""
+                      )}
+                      style={{
+                        backgroundColor: rowBackgroundColor,
+                      }}
+                      onClick={onRowSelect ? () => onRowSelect(row) : undefined}
+                    >
+                      {row.getVisibleCells().map((cell) => {
+                        const columnId = cell.column.id;
+                        const rowSpanValue =
+                          rowSpans[columnId as keyof typeof rowSpans] || 1;
+
+                        if (
+                          rowSpanState[columnId] &&
+                          rowSpanState[columnId] > 0
+                        ) {
+                          rowSpanState[columnId]--;
+                          return null;
+                        }
+
+                        if (rowSpanValue > 1) {
+                          rowSpanState[columnId] = rowSpanValue - 1;
+                        }
+
+                        return (
+                          <TableCell
+                            key={cell.id}
+                            rowSpan={
+                              rowSpanValue > 1 ? rowSpanValue : undefined
+                            }
+                            style={{
+                              ...(cell.column.getIsPinned()
+                                ? {
+                                    left:
+                                      cell.column.getIsPinned() === "left"
+                                        ? `${cell.column.getStart("left") ?? 0}px`
+                                        : undefined,
+                                    right:
+                                      cell.column.getIsPinned() === "right"
+                                        ? `${cell.column.getStart("right") ?? 0}px`
+                                        : undefined,
+                                  }
+                                : {}),
+                            }}
+                            className={cn(
+                              "font-medium relative opacity-100 z-0",
+                              cell.column.getIsPinned() &&
+                                `sticky z-20 bg-white`
+                            )}
+                            {...testProps(
+                              testID + "_BODY_" + idFormatter(cell.id)
+                            )}
+                          >
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                    {renderSubComponent && row.getIsExpanded() && (
+                      <TableRow
+                        data-state={row.getIsSelected() && "selected"}
+                        className={cn(
+                          "rounded-lg shadow-[0_2px_4px_rgba(0,0,0,0.1)]",
+                          row.getIsExpanded() &&
+                            `rounded-t-none m-0 relative -top-2.5`
+                        )}
+                      >
+                        <div className="absolute top-0 left-16 w-[80%] h-[2px] bg-muted" />
+                        {renderSubComponent({ row })}
+                      </TableRow>
+                    )}
+                  </Fragment>
+                );
+              })
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={bodyHeaderGroup.headers.length}
+                  className="h-[280px] text-center font-semibold"
+                >
+                  No Data Available.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+
+          {/* Footer Section */}
+          {showFooter && footerGroups.length > 0 && (
+            <TableFooter className="border-t border-gray-300">
+              {footerGroups.map((footerGroup) => (
+                <TableRow key={footerGroup.id} className="hover:bg-transparent">
+                  {footerGroup.headers.map((footer) => {
+                    const footerBgColor = getFooterColor?.(footer.column.id);
+                    return (
+                      <TableCell
+                        key={footer.id}
+                        colSpan={footer.colSpan}
+                        style={{
+                          ...(footer.column.getIsPinned()
+                            ? {
+                                left:
+                                  footer.column.getIsPinned() === "left"
+                                    ? `${footer.column.getStart("left") ?? 0}px`
+                                    : undefined,
+                                right:
+                                  footer.column.getIsPinned() === "right"
+                                    ? `${footer.column.getStart("right") ?? 0}px`
+                                    : undefined,
+                              }
+                            : {}),
+                          backgroundColor: footerBgColor,
+                        }}
+                        className={cn(
+                          "text-center font-semibold px-2 first:pl-4 last:pr-4 relative",
+                          footer.column.getIsPinned() && `sticky z-20`,
+                          !footerBgColor && "bg-white"
+                        )}
+                        {...testProps(
+                            testID + "_FOOTER_" + idFormatter(footer.id)
+                          )}
+                      >
+                        {footer.isPlaceholder
+                          ? null
+                          : flexRender(
+                              footer.column.columnDef.footer,
+                              footer.getContext()
+                            )}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              ))}
+            </TableFooter>
+          )}
+        </Table>
+      </div>
+    </div>
+  );
+}
