@@ -11,12 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProtectedRouteImport } from './routes/_protected'
-import { Route as DevelopRouteImport } from './routes/develop'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as ProtectedDasboardguruIndexRouteImport } from './routes/_protected/dasboard guru/index'
+import { Route as ProtectedApprovalsIndexRouteImport } from './routes/_protected/approvals/index'
+import { Route as ProtectedAuditIndexRouteImport } from './routes/_protected/audit/index'
 import { Route as ProtectedDashboardIndexRouteImport } from './routes/_protected/dashboard/index'
 import { Route as ProtectedForbiddenIndexRouteImport } from './routes/_protected/forbidden/index'
-import { Route as DevelopDasboardguruIndexRouteImport } from './routes/develop/dasboard guru/index'
+import { Route as ProtectedRequestsIndexRouteImport } from './routes/_protected/requests/index'
+import { Route as ProtectedRequestsIdRouteImport } from './routes/_protected/requests/$id'
+import { Route as ProtectedRequestsNewRouteImport } from './routes/_protected/requests/new'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -27,22 +29,21 @@ const ProtectedRoute = ProtectedRouteImport.update({
   id: '/_protected',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DevelopRoute = DevelopRouteImport.update({
-  id: '/develop',
-  path: '/develop',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProtectedDasboardguruIndexRoute =
-  ProtectedDasboardguruIndexRouteImport.update({
-    id: '/dasboard guru/',
-    path: '/dasboard guru/',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
+const ProtectedApprovalsIndexRoute = ProtectedApprovalsIndexRouteImport.update({
+  id: '/approvals/',
+  path: '/approvals/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedAuditIndexRoute = ProtectedAuditIndexRouteImport.update({
+  id: '/audit/',
+  path: '/audit/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedDashboardIndexRoute = ProtectedDashboardIndexRouteImport.update({
   id: '/dashboard/',
   path: '/dashboard/',
@@ -53,77 +54,97 @@ const ProtectedForbiddenIndexRoute = ProtectedForbiddenIndexRouteImport.update({
   path: '/forbidden/',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const DevelopDasboardguruIndexRoute =
-  DevelopDasboardguruIndexRouteImport.update({
-    id: '/dasboard guru/',
-    path: '/dasboard guru/',
-    getParentRoute: () => DevelopRoute,
-  } as any)
+const ProtectedRequestsIndexRoute = ProtectedRequestsIndexRouteImport.update({
+  id: '/requests/',
+  path: '/requests/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedRequestsIdRoute = ProtectedRequestsIdRouteImport.update({
+  id: '/requests/$id',
+  path: '/requests/$id',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedRequestsNewRoute = ProtectedRequestsNewRouteImport.update({
+  id: '/requests/new',
+  path: '/requests/new',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/develop': typeof DevelopRouteWithChildren
   '/login': typeof LoginRoute
-  '/dasboard guru/': typeof ProtectedDasboardguruIndexRoute
+  '/requests/$id': typeof ProtectedRequestsIdRoute
+  '/requests/new': typeof ProtectedRequestsNewRoute
+  '/approvals/': typeof ProtectedApprovalsIndexRoute
+  '/audit/': typeof ProtectedAuditIndexRoute
   '/dashboard/': typeof ProtectedDashboardIndexRoute
   '/forbidden/': typeof ProtectedForbiddenIndexRoute
-  '/develop/dasboard guru/': typeof DevelopDasboardguruIndexRoute
+  '/requests/': typeof ProtectedRequestsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/develop': typeof DevelopRouteWithChildren
   '/login': typeof LoginRoute
-  '/dasboard guru': typeof ProtectedDasboardguruIndexRoute
+  '/requests/$id': typeof ProtectedRequestsIdRoute
+  '/requests/new': typeof ProtectedRequestsNewRoute
+  '/approvals': typeof ProtectedApprovalsIndexRoute
+  '/audit': typeof ProtectedAuditIndexRoute
   '/dashboard': typeof ProtectedDashboardIndexRoute
   '/forbidden': typeof ProtectedForbiddenIndexRoute
-  '/develop/dasboard guru': typeof DevelopDasboardguruIndexRoute
+  '/requests': typeof ProtectedRequestsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_protected': typeof ProtectedRouteWithChildren
-  '/develop': typeof DevelopRouteWithChildren
   '/login': typeof LoginRoute
-  '/_protected/dasboard guru/': typeof ProtectedDasboardguruIndexRoute
+  '/_protected/requests/$id': typeof ProtectedRequestsIdRoute
+  '/_protected/requests/new': typeof ProtectedRequestsNewRoute
+  '/_protected/approvals/': typeof ProtectedApprovalsIndexRoute
+  '/_protected/audit/': typeof ProtectedAuditIndexRoute
   '/_protected/dashboard/': typeof ProtectedDashboardIndexRoute
   '/_protected/forbidden/': typeof ProtectedForbiddenIndexRoute
-  '/develop/dasboard guru/': typeof DevelopDasboardguruIndexRoute
+  '/_protected/requests/': typeof ProtectedRequestsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/develop'
     | '/login'
-    | '/dasboard guru/'
+    | '/requests/$id'
+    | '/requests/new'
+    | '/approvals/'
+    | '/audit/'
     | '/dashboard/'
     | '/forbidden/'
-    | '/develop/dasboard guru/'
+    | '/requests/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/develop'
     | '/login'
-    | '/dasboard guru'
+    | '/requests/$id'
+    | '/requests/new'
+    | '/approvals'
+    | '/audit'
     | '/dashboard'
     | '/forbidden'
-    | '/develop/dasboard guru'
+    | '/requests'
   id:
     | '__root__'
     | '/'
     | '/_protected'
-    | '/develop'
     | '/login'
-    | '/_protected/dasboard guru/'
+    | '/_protected/requests/$id'
+    | '/_protected/requests/new'
+    | '/_protected/approvals/'
+    | '/_protected/audit/'
     | '/_protected/dashboard/'
     | '/_protected/forbidden/'
-    | '/develop/dasboard guru/'
+    | '/_protected/requests/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProtectedRoute: typeof ProtectedRouteWithChildren
-  DevelopRoute: typeof DevelopRouteWithChildren
   LoginRoute: typeof LoginRoute
 }
 
@@ -143,13 +164,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/develop': {
-      id: '/develop'
-      path: '/develop'
-      fullPath: '/develop'
-      preLoaderRoute: typeof DevelopRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -157,11 +171,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_protected/dasboard guru/': {
-      id: '/_protected/dasboard guru/'
-      path: '/dasboard guru'
-      fullPath: '/dasboard guru/'
-      preLoaderRoute: typeof ProtectedDasboardguruIndexRouteImport
+    '/_protected/approvals/': {
+      id: '/_protected/approvals/'
+      path: '/approvals'
+      fullPath: '/approvals/'
+      preLoaderRoute: typeof ProtectedApprovalsIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/audit/': {
+      id: '/_protected/audit/'
+      path: '/audit'
+      fullPath: '/audit/'
+      preLoaderRoute: typeof ProtectedAuditIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/dashboard/': {
@@ -178,47 +199,57 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedForbiddenIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
-    '/develop/dasboard guru/': {
-      id: '/develop/dasboard guru/'
-      path: '/dasboard guru'
-      fullPath: '/develop/dasboard guru/'
-      preLoaderRoute: typeof DevelopDasboardguruIndexRouteImport
-      parentRoute: typeof DevelopRoute
+    '/_protected/requests/': {
+      id: '/_protected/requests/'
+      path: '/requests'
+      fullPath: '/requests/'
+      preLoaderRoute: typeof ProtectedRequestsIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/requests/$id': {
+      id: '/_protected/requests/$id'
+      path: '/requests/$id'
+      fullPath: '/requests/$id'
+      preLoaderRoute: typeof ProtectedRequestsIdRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/requests/new': {
+      id: '/_protected/requests/new'
+      path: '/requests/new'
+      fullPath: '/requests/new'
+      preLoaderRoute: typeof ProtectedRequestsNewRouteImport
+      parentRoute: typeof ProtectedRoute
     }
   }
 }
 
 interface ProtectedRouteChildren {
-  ProtectedDasboardguruIndexRoute: typeof ProtectedDasboardguruIndexRoute
+  ProtectedRequestsIdRoute: typeof ProtectedRequestsIdRoute
+  ProtectedRequestsNewRoute: typeof ProtectedRequestsNewRoute
+  ProtectedApprovalsIndexRoute: typeof ProtectedApprovalsIndexRoute
+  ProtectedAuditIndexRoute: typeof ProtectedAuditIndexRoute
   ProtectedDashboardIndexRoute: typeof ProtectedDashboardIndexRoute
   ProtectedForbiddenIndexRoute: typeof ProtectedForbiddenIndexRoute
+  ProtectedRequestsIndexRoute: typeof ProtectedRequestsIndexRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
-  ProtectedDasboardguruIndexRoute: ProtectedDasboardguruIndexRoute,
+  ProtectedRequestsIdRoute: ProtectedRequestsIdRoute,
+  ProtectedRequestsNewRoute: ProtectedRequestsNewRoute,
+  ProtectedApprovalsIndexRoute: ProtectedApprovalsIndexRoute,
+  ProtectedAuditIndexRoute: ProtectedAuditIndexRoute,
   ProtectedDashboardIndexRoute: ProtectedDashboardIndexRoute,
   ProtectedForbiddenIndexRoute: ProtectedForbiddenIndexRoute,
+  ProtectedRequestsIndexRoute: ProtectedRequestsIndexRoute,
 }
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
   ProtectedRouteChildren,
 )
 
-interface DevelopRouteChildren {
-  DevelopDasboardguruIndexRoute: typeof DevelopDasboardguruIndexRoute
-}
-
-const DevelopRouteChildren: DevelopRouteChildren = {
-  DevelopDasboardguruIndexRoute: DevelopDasboardguruIndexRoute,
-}
-
-const DevelopRouteWithChildren =
-  DevelopRoute._addFileChildren(DevelopRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProtectedRoute: ProtectedRouteWithChildren,
-  DevelopRoute: DevelopRouteWithChildren,
   LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport

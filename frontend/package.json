@@ -84,6 +84,9 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@kubb/plugin-oas": "^4.39.3",
+    "@kubb/plugin-react-query": "^4.39.3",
+    "@kubb/plugin-ts": "^4.39.3",
     "@tanstack/router-cli": "^1.167.40",
     "@tanstack/router-devtools": "^1.76.1",
     "@tanstack/router-plugin": "^1.76.0",

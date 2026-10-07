@@ -1,0 +1,7 @@
+{
+  "required": ["reason"],
+  "type": "object",
+  "properties": { "reason": { "minLength": 1, "type": "string" } },
+  "additionalProperties": false,
+  "x-readme-ref-name": "RejectRequestDto"
+}

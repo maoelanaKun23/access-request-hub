@@ -1,14 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/api";
 import { useNavigate } from "@tanstack/react-router";
 
-export type Role = "ADMIN" | "GURU" | "ORTU";
+export type Role = "Requester" | "Manager" | "System Owner" | "Admin";
 
 export interface User {
-  id: string;
-  nama: string;
   email: string;
   role: Role;
+  label: string;
 }
 
 function getStoredUser(): User | null {
@@ -19,6 +17,14 @@ function getStoredUser(): User | null {
   }
 }
 
+export const DEMO_USERS: User[] = [
+  { email: "alice@example.local", role: "Requester", label: "Alice (Requester)" },
+  { email: "bob@example.local", role: "Manager", label: "Bob (Manager)" },
+  { email: "carol@example.local", role: "System Owner", label: "Carol (CRM Owner)" },
+  { email: "dana@example.local", role: "System Owner", label: "Dana (Finance Owner)" },
+  { email: "erin@example.local", role: "Admin", label: "Erin (Admin/Auditor)" },
+];
+
 export function useAuth() {
   const qc = useQueryClient();
   const navigate = useNavigate();
@@ -26,38 +32,23 @@ export function useAuth() {
   const { data: user, isLoading } = useQuery<User | null>({
     queryKey: ["auth", "me"],
     queryFn: async () => {
-      if (!localStorage.getItem("token")) return null;
-      try {
-        const res = await api.get("/auth/me");
-        const u = res.data.data;
-        localStorage.setItem("user", JSON.stringify(u));
-        return u;
-      } catch {
-        localStorage.clear();
-        return null;
-      }
+      return getStoredUser();
     },
     initialData: getStoredUser,
-    staleTime: 5 * 60 * 1000,
   });
 
   const login = useMutation({
-    mutationFn: async (payload: { email: string; password: string }) => {
-      const res = await api.post("/auth/login", payload);
-      return res.data;
+    mutationFn: async (payload: { email: string; password?: string }) => {
+      // Simulate network delay
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      const foundUser = DEMO_USERS.find(u => u.email === payload.email);
+      if (!foundUser) throw new Error("User not found");
+      return foundUser;
     },
     onSuccess: (data) => {
-      localStorage.setItem("token", data.data.token);
-      localStorage.setItem("user", JSON.stringify(data.data.user));
-      qc.setQueryData(["auth", "me"], data.data.user);
-
-      // Redirect berdasarkan role
-      const role = data.data.user.role as Role;
-      switch (role) {
-        case "ADMIN": navigate({ to: "/dashboard" }); break;
-        case "GURU":  navigate({ to: "/dashboard" }); break;
-        case "ORTU":  navigate({ to: "/dashboard" }); break;
-      }
+      localStorage.setItem("user", JSON.stringify(data));
+      qc.setQueryData(["auth", "me"], data);
+      navigate({ to: "/dashboard" });
     },
   });
 
@@ -73,9 +64,7 @@ export function useAuth() {
     isLoading,
     isLoggedIn: !!user,
     role: user?.role || null,
-    isAdmin: user?.role === "ADMIN",
-    isGuru: user?.role === "GURU",
-    isOrtu: user?.role === "ORTU",
+    isAdmin: user?.role === "Admin",
     login,
     logout,
   };

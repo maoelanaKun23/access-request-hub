@@ -7,7 +7,7 @@ export const Route = createFileRoute("/")({
 function Index() {
   const navigate = useNavigate();
 
-  if (!localStorage.getItem("accessToken")) {
+  if (!localStorage.getItem("user")) {
     return navigate({ to: "/login", replace: true });
   }
 

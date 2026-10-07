@@ -1,0 +1,53 @@
+@AccessRequestHub.Api_HostAddress = http://localhost:5149
+
+### Get all access requests
+GET {{AccessRequestHub.Api_HostAddress}}/api/access-requests
+Accept: application/json
+X-User-Email: erin@example.local
+
+###
+
+### Get specific access request
+GET {{AccessRequestHub.Api_HostAddress}}/api/access-requests/1
+Accept: application/json
+X-User-Email: alice@example.local
+
+###
+
+### Get pending approvals for user
+GET {{AccessRequestHub.Api_HostAddress}}/api/approvals
+Accept: application/json
+X-User-Email: bob@example.local
+
+###
+
+### Create access request
+POST {{AccessRequestHub.Api_HostAddress}}/api/access-requests
+Content-Type: application/json
+X-User-Email: alice@example.local
+
+{
+  "clientRequestId": "req-123",
+  "applicationId": 1,
+  "environment": "NonProduction",
+  "accessLevel": "Read",
+  "justification": "Need access"
+}
+
+###
+
+### Approve access request
+POST {{AccessRequestHub.Api_HostAddress}}/api/access-requests/1/approve
+Content-Type: application/json
+X-User-Email: bob@example.local
+
+###
+
+### Reject access request
+POST {{AccessRequestHub.Api_HostAddress}}/api/access-requests/1/reject
+Content-Type: application/json
+X-User-Email: bob@example.local
+
+{
+  "reason": "Not enough justification"
+}

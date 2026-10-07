@@ -1,0 +1,20 @@
+{
+  "required": [
+    "accessLevel",
+    "applicationId",
+    "clientRequestId",
+    "environment",
+    "justification"
+  ],
+  "type": "object",
+  "properties": {
+    "clientRequestId": { "minLength": 1, "type": "string" },
+    "applicationId": { "type": "integer", "format": "int32" },
+    "environment": { "minLength": 1, "type": "string" },
+    "accessLevel": { "minLength": 1, "type": "string" },
+    "justification": { "minLength": 1, "type": "string" },
+    "policyVersion": { "type": "string", "nullable": true }
+  },
+  "additionalProperties": false,
+  "x-readme-ref-name": "CreateAccessRequestDto"
+}

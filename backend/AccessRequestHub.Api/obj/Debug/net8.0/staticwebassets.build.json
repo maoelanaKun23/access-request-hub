@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "qddNg0FoO1S2j8N+KWg1Ta7Bgp+08zXZM5bpvspR5Z0=",
+  "Source": "AccessRequestHub.Api",
+  "BasePath": "_content/AccessRequestHub.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
