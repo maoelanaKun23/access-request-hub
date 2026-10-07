@@ -1,6 +1,3 @@
-# access-request-hub
-chore: initialize assessment repository
-
 # Access Request Hub
 
 A small internal web application for managing application access requests, approvals, and audit trails.
